@@ -11,24 +11,13 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as SigninImport } from './routes/signin'
-import { Route as DashboardImport } from './routes/dashboard'
 import { Route as IndexImport } from './routes/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as LobbySessionIdIndexImport } from './routes/lobby/$sessionId/index'
+import { Route as LobbySessionIdFinishedImport } from './routes/lobby/$sessionId/finished'
+import { Route as LobbySessionIdLeaderIndexImport } from './routes/lobby/$sessionId/leader/index'
+import { Route as LobbySessionIdUserUserIdIndexImport } from './routes/lobby/$sessionId/user/$userId/index'
 
 // Create/Update Routes
-
-const SigninRoute = SigninImport.update({
-  id: '/signin',
-  path: '/signin',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardRoute = DashboardImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -36,11 +25,30 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const DashboardIndexRoute = DashboardIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DashboardRoute,
+const LobbySessionIdIndexRoute = LobbySessionIdIndexImport.update({
+  id: '/lobby/$sessionId/',
+  path: '/lobby/$sessionId/',
+  getParentRoute: () => rootRoute,
 } as any)
+
+const LobbySessionIdFinishedRoute = LobbySessionIdFinishedImport.update({
+  id: '/lobby/$sessionId/finished',
+  path: '/lobby/$sessionId/finished',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LobbySessionIdLeaderIndexRoute = LobbySessionIdLeaderIndexImport.update({
+  id: '/lobby/$sessionId/leader/',
+  path: '/lobby/$sessionId/leader/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LobbySessionIdUserUserIdIndexRoute =
+  LobbySessionIdUserUserIdIndexImport.update({
+    id: '/lobby/$sessionId/user/$userId/',
+    path: '/lobby/$sessionId/user/$userId/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -53,84 +61,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardImport
+    '/lobby/$sessionId/finished': {
+      id: '/lobby/$sessionId/finished'
+      path: '/lobby/$sessionId/finished'
+      fullPath: '/lobby/$sessionId/finished'
+      preLoaderRoute: typeof LobbySessionIdFinishedImport
       parentRoute: typeof rootRoute
     }
-    '/signin': {
-      id: '/signin'
-      path: '/signin'
-      fullPath: '/signin'
-      preLoaderRoute: typeof SigninImport
+    '/lobby/$sessionId/': {
+      id: '/lobby/$sessionId/'
+      path: '/lobby/$sessionId'
+      fullPath: '/lobby/$sessionId'
+      preLoaderRoute: typeof LobbySessionIdIndexImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof DashboardIndexImport
-      parentRoute: typeof DashboardImport
+    '/lobby/$sessionId/leader/': {
+      id: '/lobby/$sessionId/leader/'
+      path: '/lobby/$sessionId/leader'
+      fullPath: '/lobby/$sessionId/leader'
+      preLoaderRoute: typeof LobbySessionIdLeaderIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/lobby/$sessionId/user/$userId/': {
+      id: '/lobby/$sessionId/user/$userId/'
+      path: '/lobby/$sessionId/user/$userId'
+      fullPath: '/lobby/$sessionId/user/$userId'
+      preLoaderRoute: typeof LobbySessionIdUserUserIdIndexImport
+      parentRoute: typeof rootRoute
     }
   }
 }
 
 // Create and export the route tree
 
-interface DashboardRouteChildren {
-  DashboardIndexRoute: typeof DashboardIndexRoute
-}
-
-const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardIndexRoute: DashboardIndexRoute,
-}
-
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRouteWithChildren
-  '/signin': typeof SigninRoute
-  '/dashboard/': typeof DashboardIndexRoute
+  '/lobby/$sessionId/finished': typeof LobbySessionIdFinishedRoute
+  '/lobby/$sessionId': typeof LobbySessionIdIndexRoute
+  '/lobby/$sessionId/leader': typeof LobbySessionIdLeaderIndexRoute
+  '/lobby/$sessionId/user/$userId': typeof LobbySessionIdUserUserIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/signin': typeof SigninRoute
-  '/dashboard': typeof DashboardIndexRoute
+  '/lobby/$sessionId/finished': typeof LobbySessionIdFinishedRoute
+  '/lobby/$sessionId': typeof LobbySessionIdIndexRoute
+  '/lobby/$sessionId/leader': typeof LobbySessionIdLeaderIndexRoute
+  '/lobby/$sessionId/user/$userId': typeof LobbySessionIdUserUserIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRouteWithChildren
-  '/signin': typeof SigninRoute
-  '/dashboard/': typeof DashboardIndexRoute
+  '/lobby/$sessionId/finished': typeof LobbySessionIdFinishedRoute
+  '/lobby/$sessionId/': typeof LobbySessionIdIndexRoute
+  '/lobby/$sessionId/leader/': typeof LobbySessionIdLeaderIndexRoute
+  '/lobby/$sessionId/user/$userId/': typeof LobbySessionIdUserUserIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/signin' | '/dashboard/'
+  fullPaths:
+    | '/'
+    | '/lobby/$sessionId/finished'
+    | '/lobby/$sessionId'
+    | '/lobby/$sessionId/leader'
+    | '/lobby/$sessionId/user/$userId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/signin' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard' | '/signin' | '/dashboard/'
+  to:
+    | '/'
+    | '/lobby/$sessionId/finished'
+    | '/lobby/$sessionId'
+    | '/lobby/$sessionId/leader'
+    | '/lobby/$sessionId/user/$userId'
+  id:
+    | '__root__'
+    | '/'
+    | '/lobby/$sessionId/finished'
+    | '/lobby/$sessionId/'
+    | '/lobby/$sessionId/leader/'
+    | '/lobby/$sessionId/user/$userId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRouteWithChildren
-  SigninRoute: typeof SigninRoute
+  LobbySessionIdFinishedRoute: typeof LobbySessionIdFinishedRoute
+  LobbySessionIdIndexRoute: typeof LobbySessionIdIndexRoute
+  LobbySessionIdLeaderIndexRoute: typeof LobbySessionIdLeaderIndexRoute
+  LobbySessionIdUserUserIdIndexRoute: typeof LobbySessionIdUserUserIdIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRouteWithChildren,
-  SigninRoute: SigninRoute,
+  LobbySessionIdFinishedRoute: LobbySessionIdFinishedRoute,
+  LobbySessionIdIndexRoute: LobbySessionIdIndexRoute,
+  LobbySessionIdLeaderIndexRoute: LobbySessionIdLeaderIndexRoute,
+  LobbySessionIdUserUserIdIndexRoute: LobbySessionIdUserUserIdIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -144,25 +171,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/dashboard",
-        "/signin"
+        "/lobby/$sessionId/finished",
+        "/lobby/$sessionId/",
+        "/lobby/$sessionId/leader/",
+        "/lobby/$sessionId/user/$userId/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/dashboard": {
-      "filePath": "dashboard.tsx",
-      "children": [
-        "/dashboard/"
-      ]
+    "/lobby/$sessionId/finished": {
+      "filePath": "lobby/$sessionId/finished.tsx"
     },
-    "/signin": {
-      "filePath": "signin.tsx"
+    "/lobby/$sessionId/": {
+      "filePath": "lobby/$sessionId/index.tsx"
     },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx",
-      "parent": "/dashboard"
+    "/lobby/$sessionId/leader/": {
+      "filePath": "lobby/$sessionId/leader/index.tsx"
+    },
+    "/lobby/$sessionId/user/$userId/": {
+      "filePath": "lobby/$sessionId/user/$userId/index.tsx"
     }
   }
 }

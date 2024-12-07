@@ -1,17 +1,26 @@
-import { defineConfig } from "@tanstack/start/config";
-import tsConfigPaths from "vite-tsconfig-paths";
+import { defineConfig } from "@tanstack/start/config"
+import tsConfigPaths from "vite-tsconfig-paths"
+import { nodePolyfills } from "vite-plugin-node-polyfills"
 
 export default defineConfig({
+  routers: {
+    client: {
+      vite: {
+        plugins: [
+          nodePolyfills({
+            globals: {
+              Buffer: true,
+            },
+          }),
+        ],
+      },
+    },
+  },
   vite: {
     plugins: [
       tsConfigPaths({
-        projects: ["./tsconfig.json"],
+        projects: ['./tsconfig.json'],
       }),
     ],
   },
-
-  server: {
-    // https://tanstack.com/router/latest/docs/framework/react/start/hosting#deployment
-    // preset: "vercel",
-  },
-});
+})

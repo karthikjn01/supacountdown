@@ -3,35 +3,25 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createRootRouteWithContext,
   Outlet,
-  ScriptOnce,
-  ScrollRestoration,
+  ScrollRestoration
 } from "@tanstack/react-router";
-import { createServerFn, Meta, Scripts } from "@tanstack/start";
+import { Meta, Scripts } from "@tanstack/start";
 import { lazy, Suspense } from "react";
+import { Toaster } from "sonner";
 
-import { getAuthSession } from "~/server/auth";
 import appCss from "~/styles/app.css?url";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
     ? () => null // Render nothing in production
     : lazy(() =>
-        // Lazy load in development
-        import("@tanstack/router-devtools").then((res) => ({
-          default: res.TanStackRouterDevtools,
-        })),
-      );
-
-const getUser = createServerFn({ method: "GET" }).handler(async () => {
-  const { user } = await getAuthSession();
-  return user;
-});
+      // Lazy load in development
+      import("@tanstack/router-devtools").then((res) => ({
+        default: res.TanStackRouterDevtools,
+      })),
+    );
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  beforeLoad: async () => {
-    const user = await getUser();
-    return { user };
-  },
   head: () => ({
     meta: [
       {
@@ -71,15 +61,8 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
         <Suspense>
           <TanStackRouterDevtools position="bottom-right" />
         </Suspense>
-
-        <ScriptOnce>
-          {`document.documentElement.classList.toggle(
-            'dark',
-            localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-            )`}
-        </ScriptOnce>
-
         <Scripts />
+        <Toaster />
       </body>
     </html>
   );
